@@ -3,14 +3,14 @@ services:
     ports:
       - "9966:9966"
     environment:
-      - SPRING_PROFILES_ACTIVE=postgres,spring-data-jpa
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/petclinic
-      - SPRING_DATASOURCE_USERNAME=petclinic
-      - SPRING_DATASOURCE_PASSWORD=petclinic
-      - SPRING_FLYWAY_ENABLED=true
-      - SPRING_FLYWAY_URL=jdbc:postgresql://postgres:5432/petclinic
-      - SPRING_FLYWAY_USER=petclinic
-      - SPRING_FLYWAY_PASSWORD=petclinic
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}
+      - SPRING_FLYWAY_URL=${SPRING_FLYWAY_URL}
+      - SPRING_FLYWAY_USER=${SPRING_FLYWAY_USER}
+      - SPRING_FLYWAY_PASSWORD=${SPRING_FLYWAY_PASSWORD}
     depends_on:
       - postgres
     restart: always
@@ -18,9 +18,9 @@ services:
   postgres:
     image: postgres:16.3
     environment:
-      - POSTGRES_USER=petclinic
-      - POSTGRES_PASSWORD=petclinic
-      - POSTGRES_DB=petclinic
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./db/migration:/docker-entrypoint-initdb.d
