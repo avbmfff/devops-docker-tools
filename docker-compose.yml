@@ -1,0 +1,43 @@
+services:
+  build:
+    build:
+      context: .
+      dockerfile: build.Dockerfile
+    image: build
+    environment:
+      - MAVEN_VERSION=${MAVEN_VERSION}
+
+  petclinic:
+    build:
+      context: .
+      dockerfile: run.Dockerfile
+      args:
+        OPENJDK_VERSION: ${OPENJDK_VERSION}
+    image: petclinic
+    ports:
+      - "${PETCLINIC_PORT}:${PETCLINIC_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    depends_on:
+      - build
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    environment:
+      - POSTGRES_USER=petclinic
+      - POSTGRES_PASSWORD=petclinic
+      - POSTGRES_DB=petclinic
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    restart: always
+
+volumes:
+  postgres-data:
+    driver: local
