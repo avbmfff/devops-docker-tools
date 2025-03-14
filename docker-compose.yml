@@ -1,6 +1,6 @@
 services:
   petclinic:
-    image: springcommunity/spring-petclinic-rest
+    build: .
     ports:
       - "9966:9966"
     environment:
@@ -8,10 +8,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/petclinic
       - SPRING_DATASOURCE_USERNAME=petclinic
       - SPRING_DATASOURCE_PASSWORD=petclinic
-      - SPRING_FLYWAY_ENABLED=true
-      - SPRING_FLYWAY_URL=jdbc:postgresql://postgres:5432/petclinic
-      - SPRING_FLYWAY_USER=petclinic
-      - SPRING_FLYWAY_PASSWORD=petclinic
     depends_on:
       - postgres
     restart: always
@@ -24,7 +20,6 @@ services:
       - POSTGRES_DB=petclinic
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./db/migration:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     restart: always
