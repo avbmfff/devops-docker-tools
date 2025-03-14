@@ -1,17 +1,5 @@
-FROM maven:3.9.9-eclipse-temurin-17-alpine AS build
-
-RUN apk add --no-cache curl bash maven && \
-    rm -rf /var/cache/apk/*
-
-WORKDIR /app
-
-COPY pom.xml /app/
-RUN mvn dependency:go-offline
-
-COPY . /app
-RUN mvn clean install -DskipTests
-
-FROM openjdk:17-alpine
+ARG OPENJDK_VERSION
+FROM openjdk:${OPENJDK_VERSION} AS run
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
@@ -23,6 +11,9 @@ RUN chown appuser:appgroup /app/spring-petclinic-rest.jar
 
 USER appuser
 
-EXPOSE 9966
+EXPOSE ${PETCLINIC_PORT}
 
 ENTRYPOINT ["java", "-jar", "spring-petclinic-rest.jar"]
+
+# Очистка кеша
+RUN rm -rf /var/cache/apk/*
